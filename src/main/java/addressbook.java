@@ -4,42 +4,48 @@ import java.sql.*;
 
 public class addressbook {
     public static void main(String[] args) {
-        String DB_URL = "jdbc:mysql://localhost:3306/addressbook";
+        String DB_URL = "jdbc:mysql://localhost:3306/addressBook";
         String USER = "root";
         String PASS = "root";
-        Connection con;
-        try {
-            System.out.println("Connecting to database: "+DB_URL);
-            try {
-                con = DriverManager.getConnection(DB_URL,USER,PASS);
-                Statement stmt = null;
-                stmt= con.createStatement();
-            int count = stmt.executeUpdate("insert into addressBook(first_name,last_name,address_book_name,type,address,city,state,zip,phone_number,email) values(\"vikas\",\"patil\",\"bcd\",\"Friend\",\"pune\",\"pune\",\"Maharashtra\",423134,234323,\"hajare11@gmail.com\")");
-                System.out.println(count);
-                boolean val =stmt.execute("select * from addressBook");
-                if(val) {
-                    ResultSet rs = stmt.getResultSet();
-                    while (rs.next()) {
-                        System.out.print(", first_name: " + rs.   getString("first_name"));
-                        System.out.print(", last_name: " + rs.   getString("last_name"));
-                        System.out.print(", address_book_name: " + rs.getString("address_book_name"));
-                        System.out.print(", type: " + rs.getString("type"));
-                        System.out.print(", address: " + rs.getString("address"));
-                        System.out.print(", address: " + rs.   getString("address"));
-                        System.out.print(", city: " + rs.   getString("city"));
-                        System.out.print(", state: " + rs.getString("state"));
-                        System.out.print(", zip: " + rs.getInt("zip"));
-                        System.out.print(", phone_number: " + rs.getString("phone_number"));
-                        System.out.print(", email: " + rs.getString("email"));
+        Connection conn;
+        try{
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-                        System.out.println();
-                    }
+            Statement stmt = null;
+                stmt= conn.createStatement();
+            stmt.executeUpdate("CREATE TABLE contact_table(id int not null auto_increment primary key,first_name varchar(30) not null,\n" +
+                    "                       last_name varchar(30) not null,\n" +
+                    "                       address varchar(30),\n" +
+                    "                       city varchar(30),\n" +
+                    "                       state varchar(30),\n" +
+                    "                        zip int,\n" +
+                    "                        phone_number long,\n" +
+                    "                        email varchar(40))");
+            System.out.println("Created table in given database...");
+            boolean val = stmt.execute("Select * from contact_table");
+            System.out.println(val);
+            if(val){
+                ResultSet rs = stmt.getResultSet();
+                while (rs.next()){
+//                  retrieve by column name
+                    System.out.println("ID: " + rs.getInt("id"));
+                    System.out.println(", Name: " + rs.getString("first_name"));
+                    System.out.println(", Name: " + rs.getString("last_name"));
+                    System.out.println(", Name: " + rs.getString("address"));
+                    System.out.println(", Name: " + rs.getString("city"));
+                    System.out.println(", Name: " + rs.getString("state"));
+                    System.out.println(", Name: " + rs.getInt("zip"));
+                    System.out.println(", Name: " + rs.getLong("phone_number"));
+                    System.out.println(", Name: " + rs.getString("email"));
+                    System.out.println();
                 }
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            }else {
+                int count2 = stmt.getUpdateCount();
+                System.out.println(count2);
             }
-            System.out.println("Connection is successful!!!! "+con);
-        } catch (Exception e){
+
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }
